@@ -7,6 +7,7 @@ public class FormFila {
     Queue<Pessoa> filaUrgente = new ArrayDeque<>();
     Queue<Pessoa> filaPoucoUrgente = new ArrayDeque<>();
     List<String> historicoChamadas = new ArrayList<>();
+    private static final String CSV_FILE = "dados.csv";
 
     public FormFila() {
         carregaArquivo();
@@ -14,10 +15,9 @@ public class FormFila {
     }
 
     private void carregaArquivo() {
-        String csvFile = "dados.csv";
         String line;
         String[] leitura;
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(CSV_FILE))) {
             while ((line = br.readLine()) != null) {
                 Pessoa p = new Pessoa();
                 leitura = line.split(",");
@@ -38,7 +38,7 @@ public class FormFila {
         for (Pessoa p : filaUrgente) {
             System.out.println(p);
         }
-        System.out.println("\nFila Pouco Urgente:");
+        System.out.println("Fila Pouco Urgente:");
         for (Pessoa p : filaPoucoUrgente) {
             System.out.println(p);
         }
@@ -49,6 +49,21 @@ public class FormFila {
             filaUrgente.add(p);
         } else {
             filaPoucoUrgente.add(p);
+        }
+    }
+
+    private void salvarArquivo() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(CSV_FILE))) {
+            for (Pessoa p : filaUrgente) {
+                bw.write(p.toString().replace(":", ","));
+                bw.newLine();
+            }
+            for (Pessoa p : filaPoucoUrgente) {
+                bw.write(p.toString().replace(":", ","));
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -63,6 +78,7 @@ public class FormFila {
         if (atendido != null) {
             System.out.println("Atendendo: " + atendido.getNome());
             historicoChamadas.add(atendido.toString());
+            salvarArquivo();
         } else {
             System.out.println("Nenhum paciente na fila.");
         }
@@ -74,6 +90,7 @@ public class FormFila {
                 p.setGravidade(novaGravidade);
                 filaUrgente.remove(p);
                 addFila(p);
+                salvarArquivo();
                 return;
             }
         }
@@ -83,11 +100,12 @@ public class FormFila {
                 p.setGravidade(novaGravidade);
                 filaPoucoUrgente.remove(p);
                 addFila(p);
+                salvarArquivo();
                 return;
             }
         }
 
-        System.out.println("Paciente não encontrado.");
+        System.out.println("Paciente não encontrado ou inexistente!");
     }
 
     private void verHistorico() {
@@ -108,7 +126,7 @@ public class FormFila {
             System.out.println("4. Ver Filas");
             System.out.println("5. Ver Histórico de Chamadas");
             System.out.println("0. Sair");
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha algumas dessas opções: ");
             opcao = scanner.nextInt();
             scanner.nextLine();
 
@@ -122,7 +140,7 @@ public class FormFila {
                 case 3:
                     System.out.print("RG do paciente: ");
                     String rg = scanner.nextLine();
-                    System.out.print("Nova gravidade (Urgente/Pouco Urgente): ");
+                    System.out.print("Nova gravidade | (Urgente/Pouco Urgente): ");
                     String novaGravidade = scanner.nextLine();
                     atualizarPrioridade(rg, novaGravidade);
                     break;
@@ -133,10 +151,10 @@ public class FormFila {
                     verHistorico();
                     break;
                 case 0:
-                    System.out.println("Saindo...");
+                    System.out.println("saindo");
                     break;
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("inválida");
             }
         } while (opcao != 0);
         scanner.close();
@@ -154,6 +172,7 @@ public class FormFila {
         System.out.print("Gravidade (Urgente/Pouco Urgente): ");
         p.setGravidade(scanner.nextLine());
         addFila(p);
+        salvarArquivo();
         mostraFilas();
     }
 
@@ -161,4 +180,3 @@ public class FormFila {
         new FormFila();
     }
 }
-
