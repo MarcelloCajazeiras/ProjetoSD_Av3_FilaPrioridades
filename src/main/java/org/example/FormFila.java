@@ -169,7 +169,7 @@ public class FormFila {
         System.out.print("Idade: ");
         p.setIdade(scanner.nextInt());
         scanner.nextLine();
-        System.out.print("Gravidade (Urgente/Pouco Urgente): ");
+        System.out.print("Gravidade | Urgente/Pouco Urgente: ");
         p.setGravidade(scanner.nextLine());
         addFila(p);
         salvarArquivo();
