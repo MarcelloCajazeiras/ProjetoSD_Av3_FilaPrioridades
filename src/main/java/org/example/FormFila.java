@@ -120,12 +120,12 @@ public class FormFila {
         int opcao;
         do {
             System.out.println("\nMenu:");
-            System.out.println("1. Adicionar Paciente");
-            System.out.println("2. Atender Paciente");
-            System.out.println("3. Atualizar Prioridade");
-            System.out.println("4. Ver Filas");
-            System.out.println("5. Ver Histórico de Chamadas");
-            System.out.println("0. Sair");
+            System.out.println("1 - Adicionar Paciente");
+            System.out.println("2 - Atender Paciente");
+            System.out.println("3 - Atualizar Prioridade");
+            System.out.println("4 -  Visualizar filas");
+            System.out.println("5 - Histórico de Chamadas");
+            System.out.println("0 - Sair");
             System.out.print("Escolha algumas dessas opções: ");
             opcao = scanner.nextInt();
             scanner.nextLine();
